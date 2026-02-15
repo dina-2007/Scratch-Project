@@ -1,7 +1,52 @@
+//آزمایش نحوه اجرا از طریق پرسش از کاربر
+#include"engine.h"
+using namespace std;
+int main(){
+    RuntimeState state;
+    Script tentative;
+    int move_v, turn_v, repeat_num, var_v;
+    string say_t, var_n;
+    //بلوک حرکتی
+    cout << "move value: ";
+    cin >> move_v;
+    tentative.blocks.push_back(Block{MOVE, move_v, "",{},""});
+    //بلوک زاویه چرخشی
+    cout << "turn value : ";
+    cin >> turn_v;
+    tentative.blocks.push_back(Block{TURN, turn_v, "",{},""});
+    //بلوک متن
+    cin.ignore();
+    cout << "text: ";
+    getline(cin, say_t);
+    tentative.blocks.push_back(Block{SAY, 0, say_t,{},""});
+    // (نام و مقدار) بلوک تعیین متغیر
+    cout << " variable name: " ;
+    getline(cin, var_n);
+    cout << "variable value: ";
+    cin >> var_v;
+    tentative.blocks.push_back(Block{SET_VAR, var_v, "",{},""});
+    // بلوک تکرار
+    cout << "repetition: ";
+    cin>> repeat_num;
+    Block repeat_block;
+    repeat_block.type= REPEAT;
+    repeat_block.value = repeat_num;
+    repeat_block.inner_blocks.push_back(Block{MOVE,move_v, "", {}, ""});
+    repeat_block.inner_blocks.push_back(Block{TURN,turn_v, "", {}, ""});
+    tentative.blocks.push_back(repeat_block);
+
+    runScript(tentative, state);
+    return 0;
+}
+
+
+
+
+
 //#include"engine.h"
 //int main(){
 //
-//    RuntimeState state ={0, 0, 0};
+//    RuntimeState state;
 //    Block moveblock {blockType::MOVE, 10 };
 //
 //    Block saysth;
@@ -26,39 +71,3 @@
 //
 //    return 0;
 //}
-#include "engine.h"
-
-int main() {
-
-    RuntimeState state;
-
-    // set counter = 2
-    Block setCounter;
-    setCounter.type = SET_VAR;
-    setCounter.text = "counter";
-    setCounter.value = 2;
-
-    // say Positive
-    Block sayPositive;
-    sayPositive.type = SAY;
-    sayPositive.text = "Positive!";
-
-    // say Zero or Negative
-    Block sayNegative;
-    sayNegative.type = SAY;
-    sayNegative.text = "Zero or Negative!";
-
-    // IF_ELSE counter > 0
-    Block ifElseBlock;
-    ifElseBlock.type = IF_ELSE;
-    ifElseBlock.condition = "counter > 0";
-    ifElseBlock.inner_blocks = { sayPositive };
-    ifElseBlock.else_blocks = { sayNegative };
-
-    Script script;
-    script.blocks = { setCounter, ifElseBlock };
-
-    runScript(script, state);
-
-    return 0;
-}

@@ -1,5 +1,5 @@
 //
-// Created by ASUS MALL on 2/5/2026.
+//2/5/2026.
 //
 #ifndef UNTITLED44_ENGINE_H
 #define UNTITLED44_ENGINE_H
@@ -9,17 +9,21 @@
 #include<sstream>
 #include<cmath>
 #include<map>
+#include<algorithm>
 //kinds of blocks
 enum blockType{
-    MOVE,
-    TURN,
-    SAY,
-    REPEAT,
-    IF_THEN,
-    SET_VAR,
-    CHANGE_VAR,
-    WHILE_LOOP,
-    IF_ELSE
+    MOVE, //حرکت
+    TURN, //چرخش
+    SAY, // متن دریافتی از کاربر
+    REPEAT, //تکرار فرایندها
+    IF_THEN,// شرط گذاری برای اعمال فرایندها
+    IF_ELSE, //بررسی شروط
+    SET_VAR, // ایجاد متغیر و مقدار دهی آن
+    CHANGE_VAR, // مورد استفاده هنگام نیاز به تغییر مقدار
+    WHILE_LOOP, // حلقه شرطی برای تکرار، بر اساس بررسی
+    WAIT, // دستور توقف برای ابزه زمانی معین
+//    FREQUENT, // حلقه ای برای تکرار تا زمانی که دستور توقف صادر شود
+
 };
 // execution status
 struct RuntimeState{
@@ -122,12 +126,24 @@ inline void executeBlock(const Block& b, RuntimeState& state){
                }
            }
            else {
-               for (const Block &inner: b.inner_blocks) {
+               for (const Block &inner: b.else_blocks) {
                    executeBlock(inner, state);
                }
            }
            break;
 
+       case WAIT:
+           std:: cout<< "wait for "<< b.value <<"\n";
+           break;
+
+//       case FREQUENT:
+//           while (true){
+//               for (const Block& inner : b.inner_blocks){
+//                   executeBlock(inner, state);
+//                   if (b.value >0) break;
+//               }
+//           }
+//           break;
    }
 }
 // run the hole script
@@ -136,5 +152,6 @@ inline void runScript(const Script& script, RuntimeState& state) {
         executeBlock(b, state);
     }
 }
-// decomposer to be more likely to simple scratch
+// decomposer(to be more likely to simple scratch_engine)
+
 #endif //UNTITLED44_ENGINE_H
