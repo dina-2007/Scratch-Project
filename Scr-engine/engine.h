@@ -109,9 +109,10 @@ inline void executeBlock(const Block& b, RuntimeState& state){
                 }
             }
             break;
-        case WHILE_LOOP:
-            while (evaluateCondition(b.condition, state)){
-                for (const Block& inner: b.inner_blocks){
+        case WHILE_LOOP: {
+            int safe_position = state.max_loop;
+            while (evaluateCondition(b.condition, state) && safe_position--) {
+                for (const Block &inner: b.inner_blocks) {
                     executeBlock(inner, state);
                 }
             }
