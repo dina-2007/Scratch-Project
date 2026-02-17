@@ -2,7 +2,7 @@
 #ifndef COMPARISON_OPS_H
 #define COMPARISON_OPS_H
 
-#include "variable.h"
+#include "../variables/variable.h"
 #include <string>
 
 namespace ops {
