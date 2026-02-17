@@ -29,6 +29,7 @@ struct RuntimeState{
 
     int x=0, y=0, direction=0;
     std::map<std::string,int> variables;
+    int max_loop=1000; // مقدار پیش فرض و قایل تغییر در صورت نیاز (برای جلوگیری ماندن در حلقه بی نهایت)
 };
 // blocks
 struct Block{
