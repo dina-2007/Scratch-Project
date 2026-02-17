@@ -60,6 +60,9 @@ inline bool evaluateCondition(const std::string& cond, const RuntimeState& state
     if (op == ">") return left > num;
     if (op == "<") return left < num;
     if (op == "==") return left == num;
+    if (op == "<=") return left <= num;
+    if (op == ">=") return left >= num;
+    if (op == "!=") return left != num;
     return false;
 }
 
