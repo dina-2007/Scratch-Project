@@ -116,6 +116,9 @@ inline void executeBlock(const Block& b, RuntimeState& state){
                     executeBlock(inner, state);
                 }
             }
+            if (safe_position <= 0){
+                std::cout<<"the loop is stopped";
+            }
             break;
 
         case blockType::IF_THEN:
