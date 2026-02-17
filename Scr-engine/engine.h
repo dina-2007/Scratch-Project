@@ -50,7 +50,7 @@ inline bool evaluateCondition(const std::string& cond, const RuntimeState& state
     std::string vari, op;
     double num; //num=number & vari=variable
     iss >> vari >> op >> num;
-    int left=0;
+    double left=0;
     if (vari == "x") left = state.x;
     else if (vari=="y") left = state.y;
     else if (vari=="direction") left = state.direction;
