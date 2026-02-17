@@ -26,7 +26,8 @@ enum blockType{
 };
 // execution status
 struct RuntimeState{
-    int x=0, y=0, direction=0;
+
+    double x=0, y=0, direction=0;
     std::map<std::string,int> variables;
 };
 // blocks
