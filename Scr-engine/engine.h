@@ -48,7 +48,7 @@ struct Script{
 inline bool evaluateCondition(const std::string& cond, const RuntimeState& state){
     std::istringstream iss(cond);
     std::string vari, op;
-    int num; //num=number & vari=variable
+    double num; //num=number & vari=variable
     iss >> vari >> op >> num;
     int left=0;
     if (vari == "x") left = state.x;
