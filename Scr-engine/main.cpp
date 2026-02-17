@@ -24,7 +24,10 @@ int main(){
     getline(cin, var_n);
     cout << "variable value: ";
     cin >> var_v;
-    tentative.blocks.push_back(Block{SET_VAR, var_v, "",{},""});
+    tentative.blocks.push_back(Block{SET_VAR, var_v, var_n,{},"",{}});
+    //while_loop یلوک تعیین تعداد تکرار های حلقه
+    cout << "max_loop iterations:";
+    cin >> state.max_loop;
     // بلوک تکرار
     cout << "repetition: ";
     cin>> repeat_num;

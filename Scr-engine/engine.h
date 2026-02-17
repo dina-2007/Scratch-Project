@@ -26,8 +26,10 @@ enum blockType{
 };
 // execution status
 struct RuntimeState{
+
     int x=0, y=0, direction=0;
     std::map<std::string,int> variables;
+    int max_loop=1000; // مقدار پیش فرض و قایل تغییر در صورت نیاز (برای جلوگیری ماندن در حلقه بی نهایت)
 };
 // blocks
 struct Block{
@@ -46,9 +48,9 @@ struct Script{
 inline bool evaluateCondition(const std::string& cond, const RuntimeState& state){
     std::istringstream iss(cond);
     std::string vari, op;
-    int num; //num=number & vari=variable
+    double num; //num=number & vari=variable
     iss >> vari >> op >> num;
-    int left=0;
+    double left=0;
     if (vari == "x") left = state.x;
     else if (vari=="y") left = state.y;
     else if (vari=="direction") left = state.direction;
@@ -59,6 +61,9 @@ inline bool evaluateCondition(const std::string& cond, const RuntimeState& state
     if (op == ">") return left > num;
     if (op == "<") return left < num;
     if (op == "==") return left == num;
+    if (op == "<=") return left <= num;
+    if (op == ">=") return left >= num;
+    if (op == "!=") return left != num;
     return false;
 }
 
@@ -92,6 +97,7 @@ inline void executeBlock(const Block& b, RuntimeState& state){
             break;
 
         case CHANGE_VAR:
+            if (!state.variables.count(b.text)) state.variables[b.text] =0;
             state.variables[b.text] += b.value;
             std:: cout << "Change " << b.text <<" by " << b.value <<" -> " << state.variables[b.text] << "\n";
             break;
@@ -103,13 +109,18 @@ inline void executeBlock(const Block& b, RuntimeState& state){
                 }
             }
             break;
-        case WHILE_LOOP:
-            while (evaluateCondition(b.condition, state)){
-                for (const Block& inner: b.inner_blocks){
+        case WHILE_LOOP: {
+            int safe_position = state.max_loop;
+            while (evaluateCondition(b.condition, state) && safe_position--) {
+                for (const Block &inner: b.inner_blocks) {
                     executeBlock(inner, state);
                 }
             }
+            if (safe_position <= 0){
+                std::cout<<"the loop is stopped";
+            }
             break;
+        }
 
         case blockType::IF_THEN:
             if (evaluateCondition(b.condition, state)) {
