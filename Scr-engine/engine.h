@@ -96,6 +96,7 @@ inline void executeBlock(const Block& b, RuntimeState& state){
             break;
 
         case CHANGE_VAR:
+            if (!state.variables.count(b.text)) state.variables[b.text] =0;
             state.variables[b.text] += b.value;
             std:: cout << "Change " << b.text <<" by " << b.value <<" -> " << state.variables[b.text] << "\n";
             break;
