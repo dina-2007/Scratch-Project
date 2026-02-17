@@ -120,6 +120,7 @@ inline void executeBlock(const Block& b, RuntimeState& state){
                 std::cout<<"the loop is stopped";
             }
             break;
+        }
 
         case blockType::IF_THEN:
             if (evaluateCondition(b.condition, state)) {
