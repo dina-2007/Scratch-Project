@@ -2,7 +2,7 @@
 #ifndef STRING_OPS_H
 #define STRING_OPS_H
 
-#include "variable.h"
+#include "../variables/variable.h"
 #include <string>
 
 namespace ops {

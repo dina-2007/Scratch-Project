@@ -2,7 +2,7 @@
 #ifndef LOGICAL_OPS_H
 #define LOGICAL_OPS_H
 
-#include "variable.h"
+#include "../variables/variable.h"
 #include <string>
 
 namespace ops {

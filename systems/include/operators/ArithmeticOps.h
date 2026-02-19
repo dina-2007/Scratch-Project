@@ -2,7 +2,7 @@
 #ifndef ARITHMETIC_OPS_H
 #define ARITHMETIC_OPS_H
 
-#include "variable.h"
+#include "../variables/variable.h"
 #include <string>
 #include <iostream>
 
