@@ -27,9 +27,8 @@ enum blockType{
     BROADCAST, //برای ارسال پیام به اسکرپت ها
     STOP_ALL, // برای اعلان توقف به همه اسکرپت ها
 };
-
+//معرفی رویدادها و پرچم سبز
 enum trigger_type{
-    NONE,
     WHEN_GREEN_FLAG,
     WHEN_KEY,
     WHEN_CLICKED,
@@ -40,6 +39,7 @@ struct RuntimeState{
 
     int x=0, y=0, direction=0;
     std::map<std::string,int> variables;
+    bool is_running = true; // اضافه شده برای کنترل اجرا
     int max_loop=1000; // مقدار پیش فرض و قایل تغییر در صورت نیاز (برای جلوگیری ماندن در حلقه بی نهایت)
 };
 // blocks
@@ -93,6 +93,7 @@ struct EngineData{
 };
 // اجرای اسکریپت بر اساس رویدادها
 inline void dispatch_Event(EngineData& engine,trigger_type type, const std::string& value) {
+    if (!engine.is_pro_running) return;
     for (const auto &s: engine.scripts) {
         if (s.trigger == type) {
             if (type == WHEN_KEY && s.trigger_value == value) {
@@ -110,6 +111,7 @@ inline void dispatch_Event(EngineData& engine,trigger_type type, const std::stri
 
 // run a block
 inline void executeBlock(const Block& b, RuntimeState& state,EngineData* engine = nullptr){
+        if(!state.is_running) return;
     switch (b.type) {
         case blockType::MOVE: {
             double rad = state.direction * M_PI / 180.0;
@@ -212,24 +214,10 @@ inline void executeBlock(const Block& b, RuntimeState& state,EngineData* engine 
             break;
     }
 }
-
-// اجرای اسکرپت های فعال همزمان
-inline void tick(EngineData& engine){
-    for(auto i = engine.running_scripts.begin(); i != engine.running_scripts.end(); ){
-        if(i-> current_index < i-> script -> blocks.size()){
-            executeBlock(i-> script -> blocks[i -> current_index], engine.state, &engine);
-            i -> current_index++;
-            i++;
-        }
-        else {
-            i = engine.running_scripts.erase(i);
-        }
-    }
-}
-
 // run the hole script
 inline void runScript(const Script& script, RuntimeState& state,EngineData* engine =nullptr) {
     for (const Block &b: script.blocks) {
+        if (!state.is_running) break;
         executeBlock(b, state, engine);
     }
 }
@@ -274,3 +262,4 @@ inline void Status(const EngineData& engine){
 }
 // decomposer(to be more likely to simple scratch_engine)
 #endif //SCR_ENGINE_ENGINE_H
+
