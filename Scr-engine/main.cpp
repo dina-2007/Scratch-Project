@@ -51,7 +51,7 @@ int main() {
 
     Block sayHello;
     sayHello.type = SAY;
-    sayHello.text = "Program Started!";
+    sayHello.text = "Hello!";
 
     Block moveBlock;
     moveBlock.type = MOVE;
@@ -98,7 +98,7 @@ int main() {
 
     engine.scripts.push_back(clickScript);
 
-    // LOOP MENU
+    // MENU
     int choice;
 
     while (true) {
