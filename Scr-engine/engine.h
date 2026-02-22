@@ -94,26 +94,20 @@ struct EngineData{
 // اجرای اسکریپت بر اساس رویدادها
 inline void dispatch_Event(EngineData& engine, trigger_type type, const std::string& value) {
     if (!engine.is_pro_running) return;
-
     for (size_t i = 0; i < engine.scripts.size(); ++i) {
         Script& s = engine.scripts[i];
-
         if (s.trigger != type) continue;
-
         bool should_run = false;
-
         switch(type) {
             case WHEN_KEY:
             case WHEN_BROADCAST:
                 if (s.trigger_value == value) should_run = true;
                 break;
-
             case WHEN_GREEN_FLAG:
             case WHEN_CLICKED:
                 should_run = true;
                 break;
         }
-
         if (should_run) {
             Active_script a;
             a.script = &s;
