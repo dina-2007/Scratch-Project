@@ -225,5 +225,44 @@ inline void runScript(const Script& script, RuntimeState& state,EngineData* engi
         executeBlock(b, state, engine);
     }
 }
+//تابع شروع به کمک دستور پرچم سبز
+inline void start_greenFlag(EngineData& engine){
+    engine.is_pro_running = true;
+    engine.greenFlag = true;
+    engine.state.is_running = true;
+    dispatch_Event(engine, WHEN_GREEN_FLAG,"");
+}
+//اجرای همزمان اسکریپت ها
+inline void tick(EngineData& engine){
+    if (!engine.state.is_running) {
+        engine.running_scripts.clear();
+        return;
+    }
+
+    for(auto i = engine.running_scripts.begin(); i != engine.running_scripts.end(); ){
+        if(i-> current_index < i-> script -> blocks.size()){
+            executeBlock(i-> script -> blocks[i -> current_index], engine.state, &engine);
+            i -> current_index++;
+            ++i;
+        }
+        else {
+            i = engine.running_scripts.erase(i);
+        }
+    }
+}
+// نمایش وضعیت
+inline void Status(const EngineData& engine){
+    std::cout << "\nEngine Status\n";
+    std::cout << "Position: " << engine.state.x << ", " << engine.state.y << "\n";
+    std::cout << "Direction: " << engine.state.direction << " degrees\n";
+    std::cout << "Running scripts: " << engine.running_scripts.size() << "\n";
+    std::cout << "Program running: " << (engine.is_pro_running ? "Yes" : "No") << "\n";
+    std::cout << "Variables:\n";
+    for (const auto& var : engine.state.variables) {
+        std::cout << "  " << var.first << " = " << var.second << "\n";
+    }
+    std::cout << "\n";
+
+}
 // decomposer(to be more likely to simple scratch_engine)
 #endif //SCR_ENGINE_ENGINE_H
