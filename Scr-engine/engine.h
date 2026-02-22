@@ -27,7 +27,7 @@ enum blockType{
     BROADCAST, //برای ارسال پیام به اسکرپت ها
     STOP_ALL, // برای اعلان توقف به همه اسکرپت ها
 };
-//معرفی رویدادها و پرچم سبز
+
 enum trigger_type{
     WHEN_GREEN_FLAG,
     WHEN_KEY,
