@@ -94,8 +94,16 @@ struct EngineData{
 // اجرای اسکریپت بر اساس رویدادها
 inline void dispatch_Event(EngineData& engine,trigger_type type, const std::string& value) {
     for (const auto &s: engine.scripts) {
-        if (s.trigger == type && s.trigger_value == value) {
-            engine.running_scripts.push_back({&s, 0});
+        if (s.trigger == type) {
+            if (type == WHEN_KEY && s.trigger_value == value) {
+                engine.running_scripts.push_back({&s, 0});
+            } else if (type == WHEN_BROADCAST && s.trigger_value == value) {
+                engine.running_scripts.push_back({&s, 0});
+            } else if (type == WHEN_GREEN_FLAG) {
+                engine.running_scripts.push_back({&s, 0});
+            } else if (type == WHEN_CLICKED) {
+                engine.running_scripts.push_back({&s, 0});
+            }
         }
     }
 }
