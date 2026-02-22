@@ -27,7 +27,7 @@ enum blockType{
     BROADCAST, //برای ارسال پیام به اسکرپت ها
     STOP_ALL, // برای اعلان توقف به همه اسکرپت ها
 };
-
+// green flag & keys
 enum trigger_type{
     WHEN_GREEN_FLAG,
     WHEN_KEY,
@@ -92,25 +92,55 @@ struct EngineData{
     bool greenFlag = false; // برای برررسی وضعیت پرچم سبز
 };
 // اجرای اسکریپت بر اساس رویدادها
-inline void dispatch_Event(EngineData& engine,trigger_type type, const std::string& value) {
+//inline void dispatch_Event(EngineData& engine,trigger_type type, const std::string& value) {
+//    if (!engine.is_pro_running) return;
+//    for (const auto &s: engine.scripts) {
+//        if (s.trigger == type) {
+//            if (type == WHEN_KEY && s.trigger_value == value) {
+//                engine.running_scripts.push_back({&s, 0});
+//            } else if (type == WHEN_BROADCAST && s.trigger_value == value) {
+//                engine.running_scripts.push_back({&s, 0});
+//            } else if (type == WHEN_GREEN_FLAG) {
+//                engine.running_scripts.push_back({&s, 0});
+//            } else if (type == WHEN_CLICKED) {
+//                engine.running_scripts.push_back({&s, 0});
+//            }
+//        }
+//    }
+//}
+inline void dispatch_Event(EngineData& engine, trigger_type type, const std::string& value) {
     if (!engine.is_pro_running) return;
-    for (const auto &s: engine.scripts) {
-        if (s.trigger == type) {
-            if (type == WHEN_KEY && s.trigger_value == value) {
-                engine.running_scripts.push_back({&s, 0});
-            } else if (type == WHEN_BROADCAST && s.trigger_value == value) {
-                engine.running_scripts.push_back({&s, 0});
-            } else if (type == WHEN_GREEN_FLAG) {
-                engine.running_scripts.push_back({&s, 0});
-            } else if (type == WHEN_CLICKED) {
-                engine.running_scripts.push_back({&s, 0});
-            }
+
+    for (size_t i = 0; i < engine.scripts.size(); ++i) {
+        Script& s = engine.scripts[i];
+
+        if (s.trigger != type) continue;
+
+        bool should_run = false;
+
+        switch(type) {
+            case WHEN_KEY:
+            case WHEN_BROADCAST:
+                if (s.trigger_value == value) should_run = true;
+                break;
+
+            case WHEN_GREEN_FLAG:
+            case WHEN_CLICKED:
+                should_run = true;
+                break;
+        }
+
+        if (should_run) {
+            Active_script a;
+            a.script = &s;
+            a.current_index = 0;
+            engine.running_scripts.push_back(a);
         }
     }
 }
 
 // run a block
-inline void executeBlock(const Block& b, RuntimeState& state,EngineData* engine = nullptr){
+inline void executeBlock(const Block& b, RuntimeState& state,EngineData* engine = NULL){
         if(!state.is_running) return;
     switch (b.type) {
         case blockType::MOVE: {
